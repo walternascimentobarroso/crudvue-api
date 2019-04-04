@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Category;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -11,9 +13,14 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        //
+        return CategoryResource::collection(Category::paginate(25));
     }
 
     /**
@@ -24,7 +31,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $Category = Category::create($request->all());
+
+        return new CategoryResource($Category);
     }
 
     /**
@@ -33,9 +42,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $Category)
     {
-        //
+        return new CategoryResource($Category);
     }
 
     /**
@@ -45,9 +54,11 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $Category)
     {
-        //
+        $Category->update($request->all());
+
+        return new CategoryResource($Category);
     }
 
     /**
@@ -56,8 +67,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $Category)
     {
-        //
+        $Category->delete();
+
+        return response()->json(null, 204);
     }
 }
